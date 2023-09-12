@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My first Vue app</title>
+    <style>
+      * {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background-color: aquamarine;
+      }
+      section {
+        display: flex;
+        justify-content: space-around;
+        background-color: aliceblue;
+        margin: 1rem auto;
+        border: 1px solid #23d3d8;
+        /* margin-top: 1rem; */
+        padding: 2rem;
+        text-align: center;
+      }
+      img {
+        width: 50%;
+        height: 40%;
+      }
+      button {
+        width: 15%;
+        margin-right: 10px;
+        margin-top: 20px;
+        padding: 0.4rem 0.8rem;
+        font-size: medium;
+        background: #3dbed0;
+        border: none;
+        color: white;
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: olivedrab;
+        zoom: 1.01;
+        transition: all 0.5s ease-in-out;
+      }
+      #total {
+        font-size: 25px;
+        padding: 10px 0;
+      }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+  </head>
+  <body>
+    <div id="app">
+      <!--Parent Component-->
+      <!--Use Props to pass attributes to components-->
+      <section>
+        <!--Likes for root-->
+
+        <div>
+          <h2>components</h2>
+          <card
+            :like.sync="likes1"
+            title="amet consectetur adipisicing elit"
+            paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem, praesentium.
+        "
+            image-path="images/img2.jpg"
+          ></card>
+          <card
+            :like.sync="likes2"
+            title="amet consectetur adipisicing elit"
+            paragraph="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem, praesentium.
+      "
+            image-path="images/img4.jpg"
+          ></card>
+        </div>
+
+        <div style="text-align: center">
+          <h2>Root</h2>
+          <p id="total">Total Likes : {{ likes1 + likes2 }}</p>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      //<script src="https://unpkg.com/vue@3/dist/vue.global.js">
+      const app = Vue.createApp({
+        data() {
+          return {
+            likes1: 0, //For cardm 1 => component 1
+            likes2: 0, //For card 2 => component 2
+          };
+        },
+        //Child Component
+        components: {
+          card: {
+            data() {
+              return {
+                likes: 0,
+              };
+            },
+            props: {
+              title: { type: String, default: "User 2" },
+              paragraph: { type: String },
+              imagePath: { type: String, required: true },
+              like: { type: Number },
+            },
+            template: `
+                    <div>
+                        <h2>{{title}}</h2>
+                        <img :src="imagePath" />
+                        <p>{{paragraph}}</p>
+                        <h3> {{ likes}}</h3>
+                
+                        <button @click="addLike"> like </button>
+                    </div>
+                `,
+                methods:{
+                    addLike(){
+                        this.likes++;
+                        this.$emit('update:like',this.likes++)
+                    }
+                },
+          },
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
